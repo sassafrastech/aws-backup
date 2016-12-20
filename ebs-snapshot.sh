@@ -44,8 +44,6 @@ retention_date_in_seconds=$(date +%s --date "$retention_days days ago")
 
 # Set default values for var
 if [ -z "${RETAIN_DAY_OF_WEEK-}" ]; then RETAIN_DAY_OF_WEEK=-1; fi
-if [ -z "${CLIENT-}" ]; then CLIENT=""; fi
-if [ -z "${PROJECT-}" ]; then PROJECT=""; fi
 
 ## Function Declarations ##
 
@@ -95,10 +93,10 @@ snapshot_volumes() {
 		# Add a name tag
 		aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Name,Value=$SNAPSHOT_NAME_PREFIX-$(date +%Y-%m-%d)
 		
-		if [[ -n "$CLIENT" ]]; then
+		if [[ -n "${CLIENT-}" ]]; then
 			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Client,Value=$CLIENT
 		fi
-		if [[ -n "$PROJECT" ]]; then
+		if [[ -n "${PROJECT-}" ]]; then
 			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Project,Value=$PROJECT
 		fi
 	done
