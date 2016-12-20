@@ -42,6 +42,8 @@ logfile_max_lines="5000"
 retention_days="7"
 retention_date_in_seconds=$(date +%s --date "$retention_days days ago")
 
+# Set default value for var
+if [ -z "${RETAIN_DAY_OF_WEEK-}" ]; then RETAIN_DAY_OF_WEEK=-1; fi
 
 ## Function Declarations ##
 
@@ -105,7 +107,7 @@ cleanup_snapshots() {
 			snapshot_description=$(aws ec2 describe-snapshots --snapshot-id $snapshot --region $region --query Snapshots[].Description)
 
                         if (( $snapshot_date_in_seconds <= $retention_date_in_seconds )); then
-                                if [[ if [ -n "$RETAIN_DAY_OF_WEEK" ] && $(date --date=$snapshot_date +%u) == $RETAIN_DAY_OF_WEEK ]]; then
+                                if [[ $(date --date=$snapshot_date +%u) == $RETAIN_DAY_OF_WEEK ]]; then
                                         log "Not deleting because retention day: $snapshot $snapshot_description"
                                 else
                                         log "Deleting because too old: $snapshot $snapshot_description"
