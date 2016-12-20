@@ -105,7 +105,7 @@ cleanup_snapshots() {
 			snapshot_description=$(aws ec2 describe-snapshots --snapshot-id $snapshot --region $region --query Snapshots[].Description)
 
                         if (( $snapshot_date_in_seconds <= $retention_date_in_seconds )); then
-                                if [[ $(date --date=$snapshot_date +%u) == $RETAIN_DAY_OF_WEEK ]]; then
+                                if [[ if [ -n "$RETAIN_DAY_OF_WEEK" ] && $(date --date=$snapshot_date +%u) == $RETAIN_DAY_OF_WEEK ]]; then
                                         log "Not deleting because retention day: $snapshot $snapshot_description"
                                 else
                                         log "Deleting because too old: $snapshot $snapshot_description"
