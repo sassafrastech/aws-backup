@@ -94,10 +94,10 @@ snapshot_volumes() {
 		aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Name,Value=$SNAPSHOT_NAME_PREFIX-$(date +%Y-%m-%d)
 		
 		if [[ -n "${CLIENT-}" ]]; then
-			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Client,Value=$CLIENT
+			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Client,Value="$CLIENT"
 		fi
 		if [[ -n "${PROJECT-}" ]]; then
-			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Project,Value=$PROJECT
+			aws ec2 create-tags --region $region --resource $snapshot_id --tags Key=Project,Value="$PROJECT"
 		fi
 	done
 }
