@@ -63,7 +63,6 @@ Default region name: (The region that this instance is in: i.e. us-east-1, eu-we
 Default output format: (Enter "text".)```
 
 git clone https://github.com/sassafrastech/aws-backup
-chmod +x aws-backup/ebs-snapshot.sh
 
 # Manual test
 SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" aws-backup/ebs-snapshot.sh
