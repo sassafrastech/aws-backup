@@ -25,6 +25,7 @@ set -o pipefail
 #
 # ENV VARS:
 #   AWS_CONFIG_FILE - The location of your AWS config file.
+#   RETENTION_DAYS - (Optional) Number of days to retain backups. Default is 7.
 #   RETAIN_DAY_OF_WEEK - (Optional) An integer indicating a day of the week for which you would like to
 #     retain backups indefinitely. 1 is Monday, 2 is Tuesday, etc.
 
@@ -38,12 +39,11 @@ region=$(wget -q -O- http://169.254.169.254/latest/meta-data/placement/availabil
 logfile="/var/log/ebs-snapshot.log"
 logfile_max_lines="5000"
 
-# How many days do you wish to retain backups for? Default: 7 days
-retention_days="7"
-retention_date_in_seconds=$(date +%s --date "$retention_days days ago")
-
-# Set default values for var
+# Set default values for vars
+if [ -z "${RETENTION_DAYS-}" ]; then RETENTION_DAYS=7; fi
 if [ -z "${RETAIN_DAY_OF_WEEK-}" ]; then RETAIN_DAY_OF_WEEK=-1; fi
+
+retention_date_in_seconds=$(date +%s --date "$RETENTION_DAYS days ago")
 
 ## Function Declarations ##
 
@@ -102,7 +102,7 @@ snapshot_volumes() {
 	done
 }
 
-# Function: Cleanup all snapshots associated with this instance that are older than $retention_days
+# Function: Cleanup all snapshots associated with this instance that are older than $RETENTION_DAYS
 cleanup_snapshots() {
 	for volume_id in $volume_list; do
 		snapshot_list=$(aws ec2 describe-snapshots --region $region --output=text --filters "Name=volume-id,Values=$volume_id" "Name=tag:CreatedBy,Values=AutomatedBackup" --query Snapshots[].SnapshotId)
