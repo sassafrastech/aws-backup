@@ -25,6 +25,7 @@ set -o pipefail
 #
 # ENV VARS:
 #   AWS_CONFIG_FILE - The location of your AWS config file.
+#   RETAIN_FOREVER - (Optional) If set to any value, old backups won't be deleted. Overrides all other retention settings.
 #   RETENTION_DAYS - (Optional) Number of days to retain backups. Default is 7.
 #   RETAIN_DAY_OF_WEEK - (Optional) An integer indicating a day of the week for which you would like to
 #     retain backups indefinitely. 1 is Monday, 2 is Tuesday, etc.
@@ -137,4 +138,7 @@ prerequisite_check
 volume_list=$(aws ec2 describe-volumes --region $region --filters Name=attachment.instance-id,Values=$instance_id --query Volumes[].VolumeId --output text)
 
 snapshot_volumes
-cleanup_snapshots
+
+if [ -z "${RETAIN_FOREVER-}" ]; then
+	cleanup_snapshots
+fi
