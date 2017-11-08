@@ -1,11 +1,11 @@
-aws-ec2-ebs-automatic-snapshot-bash
+aws-backup
 ===================================
 
 Forked by Sassafras
 
 Bash script for Automatic EBS Snapshots and Cleanup on Amazon Web Services (AWS)
 
-Written by  **[AWS Consultants - Casey Labs Inc.] (http://www.caseylabs.com)**
+Written by **[AWS Consultants - Casey Labs Inc.] (http://www.caseylabs.com)**
 
 *Contact us for all your Amazon Web Services consulting needs!*
 
@@ -16,7 +16,7 @@ ebs-snapshot.sh will:
 - Determine the instance ID of the EC2 server on which the script runs
 - Gather a list of all volume IDs attached to that instance
 - Take a snapshot of each attached volume
-- The script will then delete all associated snapshots taken by the script that are older than 7 days
+- The script will then delete all associated snapshots taken by the script that are older than `RETENTION_DAYS` days (default = 7)
 
 Pull requests greatly welcomed!
 
@@ -62,14 +62,14 @@ AWS Secret Access Key: (Enter in the IAM credentials generated above.)
 Default region name: (The region that this instance is in: i.e. us-east-1, eu-west-1, etc.)
 Default output format: (Enter "text".)```
 
-wget https://raw.githubusercontent.com/sassafrastech/aws-ec2-ebs-automatic-snapshot-bash/master/ebs-snapshot.sh
-chmod +x ebs-snapshot.sh
+git clone https://github.com/sassafrastech/aws-backup
+chmod +x aws-backup/ebs-snapshot.sh
 
 # Manual test
-SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" ./ebs-snapshot.sh
+SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" aws-backup/ebs-snapshot.sh
 ```
 
 You should then setup a cron job in order to schedule a nightly backup. Example crontab jobs:
 ```
-0 3 * * * AWS_CONFIG_FILE="/root/.aws/config" RETAIN_DAY_OF_WEEK=4 SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" /root/ebs-snapshot.sh
+0 3 * * * AWS_CONFIG_FILE="/root/.aws/config" RETAIN_DAY_OF_WEEK=4 SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" /root/aws-backup/ebs-snapshot.sh
 ```
