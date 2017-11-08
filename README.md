@@ -1,18 +1,15 @@
-aws-backup
-===================================
+# aws-backup
 
 Forked by Sassafras
 
 Bash script for Automatic EBS Snapshots and Cleanup on Amazon Web Services (AWS)
 
-Written by **[AWS Consultants - Casey Labs Inc.] (http://www.caseylabs.com)**
+Original by Casey Labs Inc.
 
-*Contact us for all your Amazon Web Services consulting needs!*
+## Functionality
 
-===================================
-
-**How it works:**
 ebs-snapshot.sh will:
+
 - Determine the instance ID of the EC2 server on which the script runs
 - Gather a list of all volume IDs attached to that instance
 - Take a snapshot of each attached volume
@@ -20,9 +17,16 @@ ebs-snapshot.sh will:
 
 Pull requests greatly welcomed!
 
-===================================
+## Options
 
-**REQUIREMENTS**
+Options are set via env vars.
+
+* `AWS_CONFIG_FILE` - The location of your AWS config file.
+* `RETAIN_FOREVER` - (Optional) If set to any value, old backups won't be deleted. Overrides all other retention settings.
+* `RETENTION_DAYS` - (Optional) Number of days to retain backups. Default is 7.
+* `RETAIN_DAY_OF_WEEK` - (Optional) An integer indicating a day of the week for which you would like to retain backups indefinitely. 1 is Monday, 2 is Tuesday, etc.
+
+## Requirements
 
 **IAM User:** This script requires that new IAM user credentials be created, with the following IAM security policy attached:
 
@@ -48,6 +52,7 @@ Pull requests greatly welcomed!
 }
 ```
 
+## Installation
 
 ```
 sudo su -
@@ -60,13 +65,18 @@ aws configure
 AWS Access Key ID: (Enter in the IAM credentials generated above.)
 AWS Secret Access Key: (Enter in the IAM credentials generated above.)
 Default region name: (The region that this instance is in: i.e. us-east-1, eu-west-1, etc.)
-Default output format: (Enter "text".)```
+Default output format: (Enter "text".)
 
 git clone https://github.com/sassafrastech/aws-backup
+```
 
-# Manual test
+## Manual Test
+
+```
 SNAPSHOT_NAME_PREFIX=foo CLIENT="John Smith" PROJECT="Happy Appy" aws-backup/ebs-snapshot.sh
 ```
+
+## Cron Setup
 
 You should then setup a cron job in order to schedule a nightly backup. Example crontab jobs:
 ```
