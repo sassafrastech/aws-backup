@@ -25,6 +25,7 @@ Options are set via env vars.
 * `RETAIN_FOREVER` - (Optional) If set to any value, old backups won't be deleted. Overrides all other retention settings.
 * `RETENTION_DAYS` - (Optional) Number of days to retain backups. Default is 7.
 * `RETAIN_DAY_OF_WEEK` - (Optional) An integer indicating a day of the week for which you would like to retain backups indefinitely. 1 is Monday, 2 is Tuesday, etc.
+* `CLIENT`, `PROJECT` - (Optional) If given, AWS tags will be set of the same name will be set on the created snapshots. Useful for cost tracking.
 
 ## Requirements
 
